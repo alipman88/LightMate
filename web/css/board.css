@@ -1,0 +1,34 @@
+/* board */
+#board { width: 100vmin; margin: auto; }
+#board td {
+  height: 11.5vmin;
+  width: 11.5vmin;
+  font-size: 10vmin;
+  line-height: 10vmin;
+  text-align: center;
+}
+#board tr td { background-color: #696; }
+#board tr:nth-child(odd) td:nth-child(even) { background-color: #ADA; }
+#board tr:nth-child(even) td:nth-child(odd) { background-color: #ADA; }
+/* grayscale color scheme: #666 / #999 */
+
+/* pieces */
+#board .wr::after, #board .wn::after, #board .wb::after, #board .wq::after, #board .wk::after, #board .wp::after,
+#board .br::after, #board .bn::after, #board .bb::after, #board .bq::after, #board .bk::after, #board .bp::after {
+  font-family: chess;
+}
+
+#board .wr::after, #board .wn::after, #board .wb::after, #board .wq::after, #board .wk::after, #board .wp::after {
+  color: #FFFFF0; /* grayscale color scheme: #DDD */
+}
+
+#board .br::after, #board .bn::after, #board .bb::after, #board .bq::after, #board .bk::after, #board .bp::after {
+  color: #222;
+}
+
+#board .wr::after, #board .br::after { content: '♜'; }
+#board .wn::after, #board .bn::after { content: '♞'; }
+#board .wb::after, #board .bb::after { content: '♝'; }
+#board .wq::after, #board .bq::after { content: '♛'; }
+#board .wk::after, #board .bk::after { content: '♚'; }
+#board .wp::after, #board .bp::after { content: '♟'; }

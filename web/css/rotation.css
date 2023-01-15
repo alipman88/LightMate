@@ -1,0 +1,6 @@
+/* rotation */
+#board.r180 { transform: rotate(180deg); }
+#board.r180 .wr, #board.r180 .wn, #board.r180 .wb, #board.r180 .wq, #board.r180 .wk, #board.r180 .wp,
+#board.r180 .br, #board.r180 .bn, #board.r180 .bb, #board.r180 .bq, #board.r180 .bk, #board.r180 .bp {
+  transform: rotate(180deg);
+}

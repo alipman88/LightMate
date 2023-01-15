@@ -1,0 +1,33 @@
+/* board indicators */
+#board .r {
+  height: 0vmin !important;
+  position: relative;
+}
+
+#board .f {
+  height: 4vmin !important;
+  background-color: #222 !important;
+}
+
+#board .r {
+  width: 4vmin !important;
+  background-color: #222 !important;
+}
+
+#board .dot::after {
+  content: '';
+  margin: auto;
+  background-color: #333;
+  border-radius: 50%;
+  display: block;
+  height: 1.5vmin;
+  width: 1.5vmin;
+}
+
+#board .dot.lit::after {
+  background-color: #F0FFFF !important; box-shadow: 0 0 4px #F0FFFF, 0 0 4px #F0FFFF;
+}
+
+/* checkmate indicators */
+.backlit { letter-spacing: 0.5px; color: #333; }
+.backlit.lit { color: #F0FFFF; text-shadow: 0 0 2px #F0FFFF, 0 0 4px #F0FFFF; }

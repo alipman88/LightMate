@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>LightMate</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src='js/chess.js'></script>
+  <script src='js/main.js'></script>
+
+  <link rel='stylesheet' href='css/chessawesome.css'>
+  <link rel='stylesheet' href='css/basic.css'>
+  <link rel='stylesheet' href='css/board.css'>
+  <link rel='stylesheet' href='css/rotation.css'>
+  <link rel='stylesheet' href='css/indicators.css'>
+  <link rel='stylesheet' href='css/typography.css'>
+</head>
+<body>
+
+  <h3 class='container center monospace'>
+    <span id='check' class='backlit'>check</span><!--
+    --><span id='mate' class='backlit'>mate&nbsp;</span>
+  </h3>
+
+  <table id='board' border='0' cellspacing='0' cellpadding='0'>
+    <tr>
+      <td id='r8' class='r dot'></td>
+      <td id='a8' class='s'></td>
+      <td id='b8' class='s'></td>
+      <td id='c8' class='s'></td>
+      <td id='d8' class='s'></td>
+      <td id='e8' class='s'></td>
+      <td id='f8' class='s'></td>
+      <td id='g8' class='s'></td>
+      <td id='h8' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td id='r7' class='r dot'></td>
+      <td id='a7' class='s'></td>
+      <td id='b7' class='s'></td>
+      <td id='c7' class='s'></td>
+      <td id='d7' class='s'></td>
+      <td id='e7' class='s'></td>
+      <td id='f7' class='s'></td>
+      <td id='g7' class='s'></td>
+      <td id='h7' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td id='r6' class='r dot'></td>
+      <td id='a6' class='s'></td>
+      <td id='b6' class='s'></td>
+      <td id='c6' class='s'></td>
+      <td id='d6' class='s'></td>
+      <td id='e6' class='s'></td>
+      <td id='f6' class='s'></td>
+      <td id='g6' class='s'></td>
+      <td id='h6' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td id='r5' class='r dot'></td>
+      <td id='a5' class='s'></td>
+      <td id='b5' class='s'></td>
+      <td id='c5' class='s'></td>
+      <td id='d5' class='s'></td>
+      <td id='e5' class='s'></td>
+      <td id='f5' class='s'></td>
+      <td id='g5' class='s'></td>
+      <td id='h5' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td id='r4' class='r dot'></td>
+      <td id='a4' class='s'></td>
+      <td id='b4' class='s'></td>
+      <td id='c4' class='s'></td>
+      <td id='d4' class='s'></td>
+      <td id='e4' class='s'></td>
+      <td id='f4' class='s'></td>
+      <td id='g4' class='s'></td>
+      <td id='h4' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td id='r3' class='r dot'></td>
+      <td id='a3' class='s'></td>
+      <td id='b3' class='s'></td>
+      <td id='c3' class='s'></td>
+      <td id='d3' class='s'></td>
+      <td id='e3' class='s'></td>
+      <td id='f3' class='s'></td>
+      <td id='g3' class='s'></td>
+      <td id='h3' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td id='r2' class='r dot'></td>
+      <td id='a2' class='s'></td>
+      <td id='b2' class='s'></td>
+      <td id='c2' class='s'></td>
+      <td id='d2' class='s'></td>
+      <td id='e2' class='s'></td>
+      <td id='f2' class='s'></td>
+      <td id='g2' class='s'></td>
+      <td id='h2' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td id='r1' class='r dot'></td>
+      <td id='a1' class='s'></td>
+      <td id='b1' class='s'></td>
+      <td id='c1' class='s'></td>
+      <td id='d1' class='s'></td>
+      <td id='e1' class='s'></td>
+      <td id='f1' class='s'></td>
+      <td id='g1' class='s'></td>
+      <td id='h1' class='s'></td>
+      <td class='r'></td>
+    </tr>
+    <tr>
+      <td class='r f'></td>
+      <td id='fa' class='f dot'></td>
+      <td id='fb' class='f dot'></td>
+      <td id='fc' class='f dot'></td>
+      <td id='fd' class='f dot'></td>
+      <td id='fe' class='f dot'></td>
+      <td id='ff' class='f dot'></td>
+      <td id='fg' class='f dot'></td>
+      <td id='fh' class='f dot'></td>
+      <td class='r'></td>
+    </tr>
+  </table>
+
+  <script>
+    setTimeout(() => {
+      // initialize board
+      window.game = new Game();
+      game.render();
+    });
+  </script>
+</body>
+</html>
