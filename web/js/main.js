@@ -19,6 +19,29 @@ const Game = function () {
   // initialize internal board API
   const board = new Chess();
 
+  // initialize AI
+  ai = new AI();
+  ai.W.disabled = true;
+  ai.init();
+
+  // send move to AI
+  const sendMoveToAI = (from, to) => {
+    ai.makeMove(tapped[0], tapped[1], (ai) => {
+      setTimeout(() => {
+        tapped = [ai.from];
+        render();
+        light(tapped)
+      }, 0);
+
+      setTimeout(() => {
+        board.move({ from: ai.from, to: ai.to, promotion: 'q' });
+        tapped = [ai.from, ai.to];
+        render();
+        light(tapped)
+      }, 500);
+    });
+  }
+
   // main input interface
   const tap = (ev) => {
     const square = ev.target.id; // 'e2'
@@ -28,7 +51,7 @@ const Game = function () {
     if (legalMove) {
       tapped.push(square);
       render();
-      aiMove();
+      sendMoveToAI(tapped[0], tapped[1]);      
     } else if (moveablePiece) {
       tapped = [square];
     } else {
@@ -42,27 +65,6 @@ const Game = function () {
   const squares = document.getElementsByClassName('s');
   for (let square of squares) {
     square.onclick = tap;
-  }
-
-  // tell the AI to make a move
-  const aiMove = () => {
-    const moves = game.board.moves({ verbose: true });
-    if (moves.length === 0) return;
-
-    const move = moves[Math.floor(Math.random() * moves.length)];
-
-    setTimeout(() => {
-      tapped = [move.from];
-      render();
-      light(tapped)
-    }, 1000);
-
-    setTimeout(() => {
-      board.move(move);
-      tapped = [move.from, move.to];
-      render();
-      light(tapped)
-    }, 1500);
   }
 
   // light the rank and file indicators of the selected squares
