@@ -23,7 +23,7 @@ const Game = function () {
   const tap = (ev) => {
     const square = ev.target.id; // 'e2'
     const moveablePiece = board.moves({ square: square }).length > 0;
-    const legalMove = board.move({ from: tapped[0], to: square });
+    const legalMove = board.move({ from: tapped[0], to: square, promotion: 'q' });
 
     if (legalMove) {
       tapped.push(square);
