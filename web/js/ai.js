@@ -89,6 +89,17 @@ const AI = function () {
     }
   }
 
+  // play first three moves at random strength (2 - 4) to increase opening variability,
+  // then fix strength to four ply for remainder of game.
+  const startStrength = Array.from({length: 3}, () => 2 + Math.floor(Math.random() * 3));
+  let moveNumber = 0;
+  const ply = () => {
+    const result = startStrength[moveNumber] || 4;
+    moveNumber++;
+    console.log(`responding at ${result} ply`);
+    return result;
+  }
+
   const Y = (s) => {
     i = (I[s] ^ y) & z;
     if (i > 8) {
@@ -101,7 +112,7 @@ const AI = function () {
       X(0, 0, 0, 21, u, 1);
       if (y){
         setTimeout(function(){
-          X(0,0,0,21,u,2/*ply*/);
+          X(0,0,0,21,u,ply()/*ply*/);
           X(0,0,0,21,u,1);
         },250);
         //window.setTimeout("X(0,0,0,21,u,2/*ply*/),X(0,0,0,21,u,1)", 250);
