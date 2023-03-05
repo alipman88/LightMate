@@ -12,6 +12,11 @@ const Game = function () {
   const ranks = [1,2,3,4,5,6,7,8];
   const files = [A,B,C,D,E,F,G,H];
 
+  // flip coin to decide if playing as white or black
+  const playerColor = Math.random() > 0.5 ? 'w' : 'b';
+
+  document.getElementById('board').classList.toggle('r180', playerColor === 'b')
+
   // track squares have been selected
   // used to input moves and light rank and file indicators
   let tapped = [];
@@ -19,28 +24,28 @@ const Game = function () {
   // initialize internal board API
   const board = new Chess();
 
-  // initialize AI
-  ai = new AI();
-  ai.W.disabled = true;
-  ai.init();
-
-  // send move to AI
-  const sendMoveToAI = (from, to) => {
-    ai.makeMove(tapped[0], tapped[1], (ai) => {
+  const callback = (response) => {
+    if (board.turn() === response.color) {
       setTimeout(() => {
-        tapped = [ai.from];
+        tapped = [response.from];
         render();
-        light(tapped)
+        light(tapped);
       }, 0);
 
       setTimeout(() => {
-        board.move({ from: ai.from, to: ai.to, promotion: 'q' });
-        tapped = [ai.from, ai.to];
+        board.move({ from: response.from, to: response.to, promotion: 'q' });
+        tapped = [response.from, response.to];
         render();
-        light(tapped)
+        light(tapped);
       }, 500);
-    });
+    }
   }
+
+  // initialize AI
+  ai = new AI();
+  ai.init(callback);
+
+  playerColor === 'b' && ai.forceMove();
 
   // main input interface
   const tap = (ev) => {
@@ -51,7 +56,8 @@ const Game = function () {
     if (legalMove) {
       tapped.push(square);
       render();
-      sendMoveToAI(tapped[0], tapped[1]);      
+      ai.inputMove(tapped[0], tapped[1]);
+      playerColor === 'b' && ai.forceMove();
     } else if (moveablePiece) {
       tapped = [square];
     } else {

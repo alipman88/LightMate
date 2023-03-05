@@ -1,6 +1,38 @@
 // Javascript chess engine (c)2011 Oscar Toledo G.
 const AI = function () {
 
+  /* HELPERS */
+
+  // play first three moves at random strength (2 - 4) to increase opening variability,
+  // then fix strength to four ply for remainder of game.
+  const startStrength = Array.from({length: 3}, () => 2 + Math.floor(Math.random() * 3));
+  let moveNumber = 0;
+  const ply = () => {
+    const result = startStrength[moveNumber] || 4;
+    moveNumber++;
+    console.log(`responding at ${result} ply`);
+    return result;
+  }
+
+  const toLoc = (san) => {
+    var s = san.length == 3 && 1 || 0,
+        f = san.charCodeAt(s)-96,
+        r = 10-parseInt(san.substring(s+1,s+2));
+
+    return r + '' + f;
+  }
+
+  const toSAN = (loc) => {
+    var r = 10-Math.floor(loc / 10),
+        f = String.fromCharCode((loc % 10)+96);
+
+    return f+r;
+  }
+
+  let binding = {};
+
+  /* INTERNALS */
+
   var B, i, y, u, b, I, G, x, z, M, l;
 
   let exports = {};
@@ -37,7 +69,7 @@ const AI = function () {
                     I[p] = n, I[O] = m ? (I[g] = I[m], I[m] = 0) : g ? I[g] = 0 : 0;
                     L -= X(s > h | d ? 0 : p, L - N, h + 1, I[G + 1], J = q | A > 1 ? 0 : p, s);
                     if (!(h || s - 1 | B - O | i - n | p - b | L < -M)){
-                      exports.makeMove.callback && ( exports.makeMove.callback(O,p), ( exports.makeMove.callback = undefined ) );
+                      binding.cb && binding.cb({ color: y ? 'w' : 'b', from: toSAN(O), to: toSAN(p) });
                       return W(), G--, u = J;
                     }
                     J = q - 1 | A < 7 || m || !s | d | r | o < z || X(0, 0, 0, 21, 0, 0) > M;
@@ -68,36 +100,10 @@ const AI = function () {
   const O = () => {
     B = i = y = u = 0;
     while (B++ < 120) I[B - 1] = B % x ? B / x % x < 2 | B % x < 2 ? 7 : B / x & 4 ? 0 : l[i++] | 16 : 7;
-    for (var a = "<table cellspacing=0 align=center border=0>", B = 0; B < 8; B++)
-    for (a += "<tr>", i = 21; i < 29; i++) a += "<td width=40 height=40 onclick=toledoChess.Y(" + (B * x + i) + ") id=o" + (B * x + i) + " style='border:2px solid #e0e0f0' bgcolor=#" + (i + B & 1 ? "f0f" : "c0c") + "0f0 align=center>";
-    a += "<tr><td colspan=8 align=center><select id=t><option>Q<option>R<option>B";
-    !W.disabled && document.write(a + "<option>N</select></table>");
   }
 
   const W = () => {
     B = b;
-
-    if(W.disabled){
-      return;
-    }
-
-    for (var p = 21; p < 99; p += p % x - 8 ? 1 : 3) {
-      document.getElementById("o" + p).
-      innerHTML = "\xa0pknbrq  PKNBRQ".charAt(I[p] & z);
-      document.getElementById("o" + p).
-      style.borderColor = p == B ? "red" : "#e0e0f0";
-    }
-  }
-
-  // play first three moves at random strength (2 - 4) to increase opening variability,
-  // then fix strength to four ply for remainder of game.
-  const startStrength = Array.from({length: 3}, () => 2 + Math.floor(Math.random() * 3));
-  let moveNumber = 0;
-  const ply = () => {
-    const result = startStrength[moveNumber] || 4;
-    moveNumber++;
-    console.log(`responding at ${result} ply`);
-    return result;
   }
 
   const Y = (s) => {
@@ -112,61 +118,17 @@ const AI = function () {
       X(0, 0, 0, 21, u, 1);
       if (y){
         setTimeout(function(){
-          X(0,0,0,21,u,ply()/*ply*/);
+          X(0,0,0,21,u,ply());
           X(0,0,0,21,u,1);
         },250);
-        //window.setTimeout("X(0,0,0,21,u,2/*ply*/),X(0,0,0,21,u,1)", 250);
       }
     }
   }
 
-  exports.makeMove = (function(){
-    var files = { 'a':1, 'b':2, 'c':3, 'd':4, 'e':5, 'f':6, 'g':7, 'h':8 },
-        callback;
+  /* INTERFACE */
 
-    function _(from, to, callback){
-      var a = toLoc(from),
-          b = toLoc(to);
-
-      Y(toLoc(from));
-
-      setTimeout(function(){
-        callback && ( _.callback = function(from,to){
-          callback({ 'from':toSAN(from), 'to':toSAN(to) });
-        });
-      },0);
-
-      Y(toLoc(to));
-    }
-
-    function toLoc(san){
-      var s = san.length == 3 && 1 || 0,
-          f = san.charCodeAt(s)-96,
-          r = 10-parseInt(san.substring(s+1,s+2));
-
-      return r + '' + f;
-    }
-
-    function toSAN(loc){
-      var r = 10-Math.floor(loc / 10),
-          f = String.fromCharCode((loc % 10)+96);
-
-      return f+r;
-    }
-
-    return _;
-  })();
-
-  exports.X = X;
-  exports.Y = Y;
-  exports.W = W;
-
-  exports.init = function(){
-
-    if(!W.disabled && document.body){
-      document.body.innerHTML = '';
-    }
-
+  exports.init = function(callback) {
+    binding.cb = callback;
     B, i, y, u, b, I = [];
 
     G = 120;
@@ -177,6 +139,19 @@ const AI = function () {
 
     O();
     W();
+  }
+
+  exports.forceMove = () => {
+    X(0,0,0,21,0,2);
+    X(0,0,0,21,0,1);
+    W();
+  }
+
+  exports.inputMove = (from, to) => {
+    var a = toLoc(from),
+        b = toLoc(to);
+    Y(toLoc(from));
+    Y(toLoc(to));
   }
 
   return exports;
