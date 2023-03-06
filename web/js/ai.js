@@ -142,7 +142,7 @@ const AI = function () {
   }
 
   exports.forceMove = () => {
-    X(0,0,0,21,0,2);
+    X(0,0,0,21,0,ply());
     X(0,0,0,21,0,1);
     W();
   }
