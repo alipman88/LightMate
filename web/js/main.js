@@ -7,15 +7,17 @@ const Game = function () {
         E = 'e',
         F = 'f',
         G = 'g',
-        H = 'h';
+        H = 'h',
+        W = 'w';
 
   const ranks = [1,2,3,4,5,6,7,8];
   const files = [A,B,C,D,E,F,G,H];
 
   // flip coin to decide if playing as white or black
-  const playerColor = Math.random() > 0.5 ? 'w' : 'b';
+  const playerColor = Math.random() < 0.5 ? W : B;
 
-  document.getElementById('board').classList.toggle('r180', playerColor === 'b')
+  // rotate board if playing as black
+  document.getElementById('board').classList.toggle('r180', playerColor === B)
 
   // track squares have been selected
   // used to input moves and light rank and file indicators
@@ -24,28 +26,25 @@ const Game = function () {
   // initialize internal board API
   const board = new Chess();
 
-  const callback = (response) => {
-    if (board.turn() === response.color) {
-      setTimeout(() => {
-        tapped = [response.from];
-        render();
-        light(tapped);
-      }, 0);
+  // render computer move, with slight delay
+  const receiveAiMove = (move) => {
+    setTimeout(() => {
+      tapped = [move.from];
+      render();
+      light(tapped);
+    }, 0);
 
-      setTimeout(() => {
-        board.move({ from: response.from, to: response.to, promotion: 'q' });
-        tapped = [response.from, response.to];
-        render();
-        light(tapped);
-      }, 500);
-    }
+    setTimeout(() => {
+      board.move({ from: move.from, to: move.to, promotion: 'q' });
+      tapped = [move.from, move.to];
+      render();
+      light(tapped);
+    }, 500);
   }
 
-  // initialize AI
   ai = new AI();
-  ai.init(callback);
 
-  playerColor === 'b' && ai.forceMove();
+  playerColor === B && receiveAiMove(ai.forceMove());
 
   // main input interface
   const tap = (ev) => {
@@ -56,8 +55,8 @@ const Game = function () {
     if (legalMove) {
       tapped.push(square);
       render();
-      ai.inputMove(tapped[0], tapped[1]);
-      playerColor === 'b' && ai.forceMove();
+      receiveAiMove(ai.inputMove(tapped[0], tapped[1]));
+      playerColor === B && receiveAiMove(ai.forceMove());
     } else if (moveablePiece) {
       tapped = [square];
     } else {

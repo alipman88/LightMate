@@ -1,4 +1,5 @@
 // Javascript chess engine (c)2011 Oscar Toledo G.
+
 const AI = function () {
 
   /* HELPERS */
@@ -69,7 +70,7 @@ const AI = function () {
                     I[p] = n, I[O] = m ? (I[g] = I[m], I[m] = 0) : g ? I[g] = 0 : 0;
                     L -= X(s > h | d ? 0 : p, L - N, h + 1, I[G + 1], J = q | A > 1 ? 0 : p, s);
                     if (!(h || s - 1 | B - O | i - n | p - b | L < -M)){
-                      binding.cb && binding.cb({ color: y ? 'w' : 'b', from: toSAN(O), to: toSAN(p) });
+                      if (binding.color === y) binding.move = { from: toSAN(O), to: toSAN(p) };
                       return W(), G--, u = J;
                     }
                     J = q - 1 | A < 7 || m || !s | d | r | o < z || X(0, 0, 0, 21, 0, 0) > M;
@@ -117,18 +118,15 @@ const AI = function () {
       if ((i & 7) == 1 & (b < 29 | b > 90)) i = 14 - 0 ^ y;
       X(0, 0, 0, 21, u, 1);
       if (y){
-        setTimeout(function(){
-          X(0,0,0,21,u,ply());
-          X(0,0,0,21,u,1);
-        },250);
+        X(0,0,0,21,u,ply());
+        X(0,0,0,21,u,1);
       }
     }
   }
 
-  /* INTERFACE */
+  /* INITIALIZATION */
 
-  exports.init = function(callback) {
-    binding.cb = callback;
+  (() => {
     B, i, y, u, b, I = [];
 
     G = 120;
@@ -139,19 +137,25 @@ const AI = function () {
 
     O();
     W();
-  }
+  })();
+
+  /* INTERFACE */
 
   exports.forceMove = () => {
-    X(0,0,0,21,0,2);
+    binding.color = 8;
+    X(0,0,0,21,0,ply());
     X(0,0,0,21,0,1);
     W();
+    return binding.move;
   }
 
   exports.inputMove = (from, to) => {
+    binding.color = 0;
     var a = toLoc(from),
         b = toLoc(to);
     Y(toLoc(from));
     Y(toLoc(to));
+    return binding.move;
   }
 
   return exports;
