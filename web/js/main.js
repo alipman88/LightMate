@@ -16,9 +16,6 @@ const Game = function () {
   // flip coin to decide if playing as white or black
   const playerColor = Math.random() < 0.5 ? W : B;
 
-  // rotate board if playing as black
-  document.getElementById('board').classList.toggle('r180', playerColor === B)
-
   // track squares have been selected
   // used to input moves and light rank and file indicators
   let tapped = [];
@@ -48,7 +45,7 @@ const Game = function () {
 
   // main input interface
   const tap = (ev) => {
-    const square = ev.target.id; // 'e2'
+    const square = playerColor === B ? transpose(ev.target.id) : ev.target.id; // 'e2'
     const moveablePiece = board.moves({ square: square }).length > 0;
     const legalMove = board.move({ from: tapped[0], to: square, promotion: 'q' });
 
@@ -83,6 +80,7 @@ const Game = function () {
         let lit = false;
 
         for (let square of squares) {
+          if (playerColor === B) square = transpose(square);
           if (row.id[1] === square[i]) { lit = true; }
         }
 
@@ -91,13 +89,22 @@ const Game = function () {
     }
   }
 
+  // rotation was first handled via CSS, but was not pixel perfect
+  // this shim function rotates board coordinates in place of CSS.
+  const transpose = (id) => {
+    const r = 9 - parseInt(id[1]);
+    const f = String.fromCharCode(201 - id.charCodeAt(0));
+    return `${f}${r}`;
+  }
+
   const render = () => {
     for (let rank of ranks) {
       for (let file of files) {
         const id = file + rank; // 'e2'
         const square = board.get(id);
         let piece = square ? square.color + square.type : ''; // 'wp'
-        document.getElementById(id).setAttribute('class', `${piece} s`);
+        const docId = playerColor === W ? id : transpose(id)
+        document.getElementById(docId).setAttribute('class', `${piece} s`);
       }
     }
 
